@@ -1,0 +1,5 @@
+puts <<BEGIN + "<--- middle --->\n" + <<END
+  This is the beginning:
+BEGIN
+  And now it is over!
+END
