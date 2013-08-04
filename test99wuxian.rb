@@ -4,6 +4,7 @@ require 'test/unit'
 begin
   driver = Selenium::WebDriver.for :firefox
   driver.get "http://wap.99wuxian.com/"
+  puts driver.methods
   sleep 3
   links = driver.find_elements(:tag_name, 'a' )
   i = 0
