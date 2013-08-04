@@ -10,9 +10,6 @@ class BasePage < Browser
     super driver
     @url = url
   end
-  # def open
-    # Browser.browserDriver
-  # end
   def open
     @driver.get @url
   end
@@ -48,6 +45,12 @@ class LoginPage < BasePage
     @text_username = @driver.find_element(:id, "userName")
     @text_password = @driver.find_element(:id, "password")
     @text_valid = @driver.find_element(:name, "jcaptcha")
+  end
+  def text_result
+    # result = Array.new
+    @text_hot = @driver.find_element(:class, "hot").text
+    result = @text_hot
+    return result
   end
   def setUserName(username)
     forms
