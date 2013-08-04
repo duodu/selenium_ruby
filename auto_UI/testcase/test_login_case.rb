@@ -1,18 +1,31 @@
 #encoding:utf-8
-require 'roo'
+require 'win32ole'
+require 'pathname'
 require '../test/test_login.rb'
 
-excel = Roo::Excelx.new("../data/test_login.xlsx")
-excel.default_sheet = excel.sheets.first
-end_row_line = excel.last_row
-puts end_row_line
-# excel.set('E', 2, 'pass')
+path = Pathname.new(File.dirname(__FILE__)).realpath
+WIN32OLE.codepage = WIN32OLE::CP_UTF8
+excel = WIN32OLE::new('excel.Application')
+workbook = excel.Workbooks.Open("#{path}/data/test_login.xlsx")
+worksheet = workbook.Worksheets(1)
+worksheet.Select
+end_row_line = worksheet.UsedRange.rows.Count
 
-for line in 2 .. end_row_line
-  testid = excel.cell('A', line).to_i
-  username = excel.cell('B', line).to_s
-  password = excel.cell('C', line).to_s
-  expected = excel.cell('D', line).to_s
-  test = TestLogin.new username, password, expected
-  test.execute_test
+begin
+  for line in 2 .. end_row_line
+    testid = worksheet.Range("A#{line}").value.to_i
+    username = worksheet.Range("B#{line}").value.to_s
+    password = worksheet.Range("C#{line}").value.to_s
+    expected = worksheet.Range("D#{line}").value.to_s
+    test = TestLogin.new username, password, [expected]
+    report = test.assert
+    worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 3 if report[:result] == 'Fail'
+    worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 50 if report[:result] == 'Pass'
+    worksheet.Range("E#{line}").value = report[:actual]
+    worksheet.Range("F#{line}").value = report[:result]
+    workbook.save
+  end
+ensure
+  workbook.close
+  excel.quit
 end
