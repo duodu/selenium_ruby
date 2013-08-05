@@ -5,6 +5,7 @@ class Browser
     @driver = driver
   end
 end
+
 class BasePage < Browser
   def initialize url, driver
     super driver
@@ -34,8 +35,8 @@ class IndexPage < BasePage
     links
     @link_RegPage.click
   end
-  
 end
+
 class LoginPage < BasePage
   def links
     @btn_login = @driver.find_element(:name, "log")
@@ -73,4 +74,3 @@ class LoginPage < BasePage
     @link_IndexPage.click
   end
 end
-
