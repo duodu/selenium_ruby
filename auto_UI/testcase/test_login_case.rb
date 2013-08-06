@@ -13,17 +13,22 @@ end_row_line = worksheet.UsedRange.rows.Count
 
 begin
   for line in 2 .. end_row_line
-    testid = worksheet.Range("A#{line}").value.to_i
-    username = worksheet.Range("B#{line}").value.to_s
-    password = worksheet.Range("C#{line}").value.to_s
-    expected = worksheet.Range("D#{line}").value.to_s
-    test = TestLogin.new username, password, [expected]
-    report = test.assert
-    worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 3 if report[:result] == 'Fail'
-    worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 50 if report[:result] == 'Pass'
-    worksheet.Range("E#{line}").value = report[:actual]
-    worksheet.Range("F#{line}").value = report[:result]
-    workbook.save
+    begin
+      testid = worksheet.Range("A#{line}").value.to_i
+      username = worksheet.Range("B#{line}").value.to_s
+      password = worksheet.Range("C#{line}").value.to_s
+      expected = worksheet.Range("D#{line}").value.to_s
+      test = TestLogin.new username, password, [expected]
+      report = test.assert
+      worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 3 if report[:result] == 'Fail'
+      worksheet.Range("A#{line}:F#{line}").Interior.ColorIndex = 50 if report[:result] == 'Pass'
+      test.screenshot("#{path}/screenshot/testlogin_error_id#{testid}.png") if report[:result] == 'Fail'
+      worksheet.Range("E#{line}").value = report[:actual]
+      worksheet.Range("F#{line}").value = report[:result]
+    ensure
+      workbook.save
+      test.quit
+    end
   end
 ensure
   workbook.close

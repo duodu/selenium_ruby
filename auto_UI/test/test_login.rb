@@ -23,27 +23,29 @@ class TestLogin < ValidTest
     @expected = expected
   end
   def execute_test
-    begin
-      driver = Selenium::WebDriver.for :firefox
-      index = IndexPage.new $url, driver
-      index.open
-      index.toLoginPage
-      loginpage = LoginPage.new index.currentUrl, driver
-      loginpage.setUserName(@username)
-      loginpage.setPassWord(@password)
-      loginpage.setVaildText("8888")
-      loginpage.login
-      actual = Array.new
-      actual << loginpage.text_result
-      return actual
-    ensure
-      driver.quit
-    end
+    @driver = Selenium::WebDriver.for :firefox
+    index = IndexPage.new $url, @driver
+    index.open
+    index.toLoginPage
+    loginpage = LoginPage.new index.currentUrl, @driver
+    loginpage.setUserName(@username)
+    loginpage.setPassWord(@password)
+    loginpage.setVaildText("8888")
+    loginpage.login
+    actual = Array.new
+    actual << loginpage.text_result
+    return actual
   end
   def assert
     actual = execute_test
     # puts "expeced= #{@expected}, #{@expected.class}, #{@expected.length}"
     # puts "actual= #{actual}, #{actual.class}, #{actual.length}"
     super(@expected, actual)
+  end
+  def screenshot filename
+    @driver.save_screenshot filename
+  end
+  def quit
+    @driver.quit
   end
 end
