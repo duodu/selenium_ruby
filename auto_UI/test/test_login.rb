@@ -38,8 +38,6 @@ class TestLogin < ValidTest
   end
   def assert
     actual = execute_test
-    # puts "expeced= #{@expected}, #{@expected.class}, #{@expected.length}"
-    # puts "actual= #{actual}, #{actual.class}, #{actual.length}"
     super(@expected, actual)
   end
   def screenshot filename
