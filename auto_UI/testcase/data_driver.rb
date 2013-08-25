@@ -1,7 +1,7 @@
 #encoding:utf-8
 require 'win32ole'
 require 'pathname'
-require '../test/test_login.rb'
+require '../testbusiness/test_login.rb'
 
 class Excel_driver
   def initialize filename
@@ -14,22 +14,25 @@ class Excel_driver
     @workbook = @excel.Workbooks.Open(@path)
   end
   def sheetselect num
-    @worksheet = workbook.Worksheets(num)
+    @worksheet = @workbook.Worksheets(num)
     @worksheet.Select
   end
   def end_row
     return @worksheet.UsedRange.rows.Count
   end
   def end_column
-    return @worksheet.UsedRange.column.Count
+    return @worksheet.UsedRange.columns.Count
   end
   def cell column, row
     return @worksheet.Range("#{column}#{row}").value
   end
   def setColor row, result
-    endcolumn = end_column
-    @worksheet.Range("A#{row}:#{endcolumn}#{row}").Interior.ColorIndex = 3 if result == 'Fail'
-    @worksheet.Range("A#{row}:#{endcolumn}#{row}").Interior.ColorIndex = 50 if result == 'Pass'
+    # endcolumn = end_column
+    if result == 'Fail'
+      @worksheet.Range("A#{row}:F#{row}").Interior.ColorIndex = 3
+    elsif result == 'Pass'
+      @worksheet.Range("A#{row}:F#{row}").Interior.ColorIndex = 50
+    end
   end
   def save
     @workbook.save
@@ -49,11 +52,11 @@ class Excel_driver
     # # end
   # end
   def write cell, value
-    @wooksheet.Range(cell).value = value
+    @worksheet.Range(cell).value = value
   end
   def case_id_array
     id_array = Array.new
-    for line in 1 .. end_row
+    for line in 2 .. end_row
       id_array << @worksheet.Range("A#{line}").value.to_i
     end
     return id_array

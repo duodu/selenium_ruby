@@ -1,7 +1,7 @@
 #encoding:utf-8
 require 'win32ole'
 require 'pathname'
-require '../test/test_login.rb'
+require '../testbusiness/test_login.rb'
 
 path = Pathname.new(File.dirname(__FILE__)).realpath
 WIN32OLE.codepage = WIN32OLE::CP_UTF8
