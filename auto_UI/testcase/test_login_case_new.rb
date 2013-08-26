@@ -18,15 +18,15 @@ class Test_Execute
       id_array.each do |testid|
         begin
           row = testid + 1
-          username = test_login_excel.cell('B',row)
-          password = test_login_excel.cell('C',row)
-          expected = test_login_excel.cell('D',row)
+          username = test_login_excel.cell('B', row)
+          password = test_login_excel.cell('C', row)
+          expected = test_login_excel.cell('D', row)
           test = TestLogin.new username, password, [expected]
           report = test.assert
           test_login_excel.setColor(row, report[:result])
           test.screenshot("#{path}/screenshot/testlogin_error_id#{testid}.png") if report[:result] == 'Fail'
-          test_login_excel.write("E#{row}",report[:actual])
-          test_login_excel.write("F#{row}",report[:result])
+          test_login_excel.write("E#{row}", report[:actual])
+          test_login_excel.write("F#{row}", report[:result])
         ensure
           test_login_excel.save
           test.quit
