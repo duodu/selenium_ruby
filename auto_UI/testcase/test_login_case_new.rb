@@ -37,6 +37,3 @@ class Test_Execute
     end
   end
 end
-
-# mytestexecute = Test_Execute.new 'test_login.xlsx'
-# mytestexecute.execute
